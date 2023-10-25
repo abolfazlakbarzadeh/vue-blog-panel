@@ -1,0 +1,82 @@
+<template>
+  <Form
+    v-slot="{ errors, isSubmitting }"
+    class="login-form d-flex flex-column gap-3"
+    :validation-schema="schema"
+    @submit="submitHandler"
+  >
+    <div class="form-group">
+      <label for="email" :class="{ 'text-danger': errors.email }">Email</label>
+      <Field
+        id="email"
+        v-model="data.email"
+        name="email"
+        type="email"
+        class="form-control"
+        :class="{ 'is-invalid': errors.email }"
+      />
+      <div class="invalid-feedback">{{ errors.email }}</div>
+    </div>
+    <div class="form-group">
+      <label for="password" :class="{ 'text-danger': errors.password }"
+        >Password</label
+      >
+      <Field
+        id="password"
+        v-model="data.password"
+        name="password"
+        type="password"
+        class="form-control"
+        :class="{ 'is-invalid': errors.password }"
+      />
+      <div class="invalid-feedback">{{ errors.password }}</div>
+    </div>
+    <div class="d-grid mt-3">
+      <button
+        type="submit"
+        class="btn btn-primary btn-block"
+        :disabled="isSubmitting"
+      >
+        <span
+          v-show="isSubmitting"
+          class="spinner-border spinner-border-sm mr-1"
+        ></span>
+        Login
+      </button>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <div class="text">Don't have account?</div>
+      <RouterLink
+        to="/auth/signup"
+        class="fw-bold text-decoration-none text-black"
+        >Register Now</RouterLink
+      >
+    </div>
+  </Form>
+</template>
+<script lang="ts" setup>
+import { reactive } from "vue";
+import { Form, Field } from "vee-validate";
+import { RouterLink } from "vue-router";
+import * as Yup from "yup";
+const data = reactive({
+  email: "",
+  password: "",
+});
+
+const schema = Yup.object().shape({
+  email: Yup.string().email().required("Email is required!"),
+  password: Yup.string().required("Password is required!"),
+});
+
+function submitHandler(values, { setErrors }) {
+  console.log({
+    values,
+    setErrors,
+  });
+  return false;
+}
+</script>
+<style scss>
+@import url("@/assets/styles/components/auth/login-form.scss");
+</style>
