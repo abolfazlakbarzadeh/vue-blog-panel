@@ -9,4 +9,14 @@
     .hr-actions {
         margin-left: auto;
     }
+
+    .hr-menu-toggle {
+        display: none;
+    }
+
+    @media screen and (max-width: $media-tablet) {
+        .hr-menu-toggle {
+            display: flex;
+        }
+    }
 }

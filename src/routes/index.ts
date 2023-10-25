@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import LoginPage from "pages/auth/login-page.vue";
 import RegisterPage from "pages/auth/register-page.vue";
 import DashboardPage from "pages/dashboard/dashboard-page.vue";
+import ArticlesPage from "pages/dashboard/articles/articles-page.vue";
 import { ROUTES_NAMES } from "./constants";
 
 const router = createRouter({
@@ -30,6 +31,13 @@ const router = createRouter({
       meta: {
         requiresAuth: true,
       },
+      children: [
+        {
+          name: ROUTES_NAMES.dashboard.articles.self,
+          path: "/dashboard/article",
+          component: ArticlesPage,
+        },
+      ],
     },
   ],
 });
