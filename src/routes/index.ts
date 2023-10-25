@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LoginPage from "pages/auth/login-page.vue";
 import RegisterPage from "pages/auth/register-page.vue";
+import DashboardPage from "pages/dashboard/dashboard-page.vue";
 import { ROUTES_NAMES } from "./constants";
 
 const router = createRouter({
@@ -20,6 +21,14 @@ const router = createRouter({
       component: RegisterPage,
       meta: {
         isGuest: true,
+      },
+    },
+    {
+      name: ROUTES_NAMES.dashboard.self,
+      path: "/dashboard",
+      component: DashboardPage,
+      meta: {
+        requiresAuth: true,
       },
     },
   ],
