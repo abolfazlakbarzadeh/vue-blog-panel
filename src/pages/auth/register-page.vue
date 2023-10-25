@@ -3,16 +3,16 @@
     <div class="row align-items-center justify-content-center auth-page">
       <div class="card auth-card">
         <div class="card-body">
-          <h5 class="card-title">LOGIN</h5>
+          <h5 class="card-title">Register</h5>
           <div class="card-text">
             <div class="d-flex flex-column gap-3">
-              <LoginForm />
+              <RegisterForm />
               <div class="d-flex align-items-center gap-2">
-                <div class="text">Don't have account?</div>
+                <div class="text">Already registred?</div>
                 <RouterLink
-                  :to="{ name: ROUTES_NAMES.auth.register }"
+                  :to="{ name: ROUTES_NAMES.auth.login }"
                   class="fw-bold text-decoration-none text-black"
-                  >Register Now</RouterLink
+                  >Login</RouterLink
                 >
               </div>
             </div>
@@ -23,7 +23,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import LoginForm from "@/components/auth/login-form.vue";
+import RegisterForm from "@/components/auth/register-form.vue";
 import { ROUTES_NAMES } from "@/routes/constants";
 </script>
 <style scss>
