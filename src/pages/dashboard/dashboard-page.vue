@@ -6,7 +6,9 @@
     />
     <main class="d-flex">
       <TheSidebar :open="sidebarOpen" />
-      <router-view></router-view>
+      <div class="container-fluid dashboard-main">
+        <router-view></router-view>
+      </div>
     </main>
   </div>
 </template>
