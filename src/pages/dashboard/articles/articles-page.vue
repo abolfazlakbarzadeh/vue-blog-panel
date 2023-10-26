@@ -35,8 +35,10 @@
                   Actions
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                  <li><a class="dropdown-item" href="#">Edit</a></li>
-                  <li><a class="dropdown-item" href="#">Delete</a></li>
+                  <li>
+                    <div class="dropdown-item">Edit</div>
+                  </li>
+                  <li><div class="dropdown-item">Delete</div></li>
                 </ul>
               </div>
             </td>
