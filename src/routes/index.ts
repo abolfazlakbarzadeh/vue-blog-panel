@@ -8,7 +8,7 @@ import EditArticlePage from "pages/dashboard/articles/edit-article-page.vue";
 import { ROUTES_NAMES } from "./constants";
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes: [
     {
       name: ROUTES_NAMES.auth.login,

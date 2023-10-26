@@ -5,6 +5,10 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import { createPinia } from "pinia";
 import routes from "./routes";
+import axios from "@/utils/axios";
 
 const pinia = createPinia();
-createApp(App).use(routes).use(pinia).mount("#app");
+const app = createApp(App);
+app.use(routes).use(pinia);
+app.provide("axios", axios);
+app.mount("#app");
