@@ -1,9 +1,18 @@
 .dashboard-page {
     main {
-        height: calc(100vh - 60px);
+        min-height: calc(100vh - 60px);
 
         .dashboard-main {
             padding: 1.5625rem 1.875rem;
+            padding-left: calc(15.625rem + 1.875rem);
+        }
+    }
+
+    @media screen and (max-width: $media-tablet) {
+        main {
+            .dashboard-main {
+                padding-left: 1.875rem;
+            }
         }
     }
 }

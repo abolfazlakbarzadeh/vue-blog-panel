@@ -61,7 +61,18 @@ const menuItems = computed<MenuItem[]>(() => [
       {
         title: "All Articles",
         route: ROUTES_NAMES.dashboard.articles.self,
-        active: route.name == ROUTES_NAMES.dashboard.articles.self,
+        active: [
+          ROUTES_NAMES.dashboard.articles.self,
+          ROUTES_NAMES.dashboard.articles.page,
+        ].some((routeName) => routeName == route.name),
+      },
+      {
+        title: "New Articles",
+        route: ROUTES_NAMES.dashboard.articles.create,
+        active: [
+          ROUTES_NAMES.dashboard.articles.create,
+          ROUTES_NAMES.dashboard.articles.edit,
+        ].some((routeName) => routeName == route.name),
       },
     ],
   },

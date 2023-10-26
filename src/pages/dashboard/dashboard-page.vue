@@ -18,7 +18,7 @@ import TheHeader from "@/components/dashboard/the-header.vue";
 import TheSidebar from "@/components/dashboard/the-sidebar.vue";
 
 const sidebarOpen = ref(false);
-function toggleSidebarHandler(isOpen: Boolean) {
+function toggleSidebarHandler(isOpen: boolean) {
   sidebarOpen.value = isOpen;
 }
 </script>

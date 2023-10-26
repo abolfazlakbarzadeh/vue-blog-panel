@@ -3,6 +3,8 @@ import LoginPage from "pages/auth/login-page.vue";
 import RegisterPage from "pages/auth/register-page.vue";
 import DashboardPage from "pages/dashboard/dashboard-page.vue";
 import ArticlesPage from "pages/dashboard/articles/articles-page.vue";
+import NewArticlePage from "pages/dashboard/articles/new-article-page.vue";
+import EditArticlePage from "pages/dashboard/articles/edit-article-page.vue";
 import { ROUTES_NAMES } from "./constants";
 
 const router = createRouter({
@@ -10,7 +12,7 @@ const router = createRouter({
   routes: [
     {
       name: ROUTES_NAMES.auth.login,
-      path: "/auth/login",
+      path: "/login",
       component: LoginPage,
       meta: {
         isGuest: true,
@@ -18,7 +20,7 @@ const router = createRouter({
     },
     {
       name: ROUTES_NAMES.auth.register,
-      path: "/auth/register",
+      path: "/register",
       component: RegisterPage,
       meta: {
         isGuest: true,
@@ -26,7 +28,7 @@ const router = createRouter({
     },
     {
       name: ROUTES_NAMES.dashboard.self,
-      path: "/dashboard",
+      path: "/",
       component: DashboardPage,
       meta: {
         requiresAuth: true,
@@ -34,8 +36,23 @@ const router = createRouter({
       children: [
         {
           name: ROUTES_NAMES.dashboard.articles.self,
-          path: "/dashboard/article",
+          path: "/articles",
           component: ArticlesPage,
+        },
+        {
+          name: ROUTES_NAMES.dashboard.articles.page,
+          path: "/articles/page/:page",
+          component: ArticlesPage,
+        },
+        {
+          name: ROUTES_NAMES.dashboard.articles.create,
+          path: "/articles/create",
+          component: NewArticlePage,
+        },
+        {
+          name: ROUTES_NAMES.dashboard.articles.edit,
+          path: "/articles/edit/:slug",
+          component: EditArticlePage,
         },
       ],
     },

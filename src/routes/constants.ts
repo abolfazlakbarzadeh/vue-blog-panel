@@ -8,6 +8,9 @@ export const ROUTES_NAMES = {
     self: "dashboard",
     articles: {
       self: `dashboard-articles`,
+      page: `dashboard-articles-page`,
+      create: `dashboard-articles-create`,
+      edit: `dashboard-articles-edit`,
     },
   },
 };
