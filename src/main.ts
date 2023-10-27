@@ -25,7 +25,7 @@ app
     theme: "colored",
     icon: false,
     style: {
-      zIndex: 3,
+      zIndex: 30,
     },
   } as ToastContainerOptions);
 app.mount("#app");

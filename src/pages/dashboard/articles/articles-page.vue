@@ -2,62 +2,52 @@
   <div class="articles-page">
     <div class="d-flex flex-column align-items-center gap-4">
       <h1 class="w-100">All Posts</h1>
-
-      <table class="table">
-        <thead class="table-light">
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Title</th>
-            <th scope="col">Author</th>
-            <th scope="col">Tags</th>
-            <th scope="col">Excerpt</th>
-            <th scope="col">Created</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td scope="row">Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-            <td>@mdo</td>
-            <td>@mdo</td>
-            <td>
-              <div class="dropdown">
-                <button
-                  id="dropdownMenuButton1"
-                  class="btn btn-info dropdown-toggle text-white"
-                  type="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Actions
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                  <li>
-                    <div class="dropdown-item">Edit</div>
-                  </li>
-                  <li><div class="dropdown-item">Delete</div></li>
-                </ul>
-              </div>
-            </td>
-          </tr>
-          <tr></tr>
-        </tbody>
-      </table>
-      <ul class="pagination">
-        <li class="page-item">
-          <a class="page-link" href="#">{{ "<" }}</a>
-        </li>
-        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item">
-          <a class="page-link" href="#">{{ ">" }}</a>
-        </li>
-      </ul>
+      <TheArticlesTable
+        :articles="articles"
+        :current-page="currentPage"
+        :page-size="pageSize"
+      />
+      <ThePagination :total-pages="totalPages" :current-page="currentPage" />
     </div>
   </div>
 </template>
-<script setup></script>
+<script lang="ts" setup>
+import TheArticlesTable from "@/components/dashboard/articles/the-articles-table.vue";
+import ThePagination from "@/components/dashboard/articles/the-pagination.vue";
+import { useArticleService } from "@/services/articles-service";
+import { FetchArticlesResponse } from "@/services/types";
+import { onMounted, ref, watch } from "vue";
+import { useRoute } from "vue-router";
+
+const articles = ref<FetchArticlesResponse["articles"]>([]);
+const route = useRoute();
+const currentPage = ref(Number(route.params.page ?? 1));
+const totalPages = ref(1);
+const pageSize = ref(10);
+
+const articlesService = useArticleService();
+
+async function fetchArticles() {
+  const data = (await articlesService.fetchArticles({
+    offset: currentPage.value * pageSize.value - pageSize.value,
+    limit: pageSize.value,
+  })) as Awaited<FetchArticlesResponse>;
+
+  articles.value = data.articles;
+
+  totalPages.value = Math.floor(data.articlesCount / pageSize.value);
+  if ((data.articlesCount / pageSize.value) % pageSize.value) {
+    totalPages.value++;
+  }
+}
+onMounted(() => {
+  fetchArticles();
+});
+watch(
+  () => route.params.page,
+  () => {
+    currentPage.value = Number(route.params.page ?? 1);
+    fetchArticles();
+  },
+);
+</script>

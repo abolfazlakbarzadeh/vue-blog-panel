@@ -11,7 +11,8 @@
 .loading-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: white;
+  z-index: 20;
   .spinner {
     position: absolute;
     left: 50%;

@@ -10,6 +10,7 @@ import { USER_INITIAL } from "./contants";
 import { toast } from "vue3-toastify";
 import { AxiosError } from "axios";
 import { useGlobalStore } from "../global/global-store";
+import { getUnprocessableStatusErrors } from "@/helpers/http";
 
 export const AUTH_STORE_NAME = "auth-store";
 
@@ -111,11 +112,9 @@ const handleCatch =
           break;
         }
         case 422: {
-          const errors = Object.entries(error.response.data?.errors || {}).map(
-            ([key, value]) => `Login Failed!: ${key} ${value}`,
-          );
+          const errors = getUnprocessableStatusErrors(error);
           errors.forEach((error) => {
-            toast.error(error);
+            toast.error(`Login Failed! ${error}`);
           });
           break;
         }
@@ -128,11 +127,9 @@ const handleCatch =
     function handlerRegisterCatch() {
       switch (error?.response?.status) {
         case 422: {
-          const errors = Object.entries(error.response.data?.errors || {}).map(
-            ([key, value]) => `Register Failed!: ${key} ${value}`,
-          );
+          const errors = getUnprocessableStatusErrors(error);
           errors.forEach((error) => {
-            toast.error(error);
+            toast.error(`Register Failed! ${error}`);
           });
           break;
         }
