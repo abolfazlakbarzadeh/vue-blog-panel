@@ -4,4 +4,7 @@ export default {
     "^.+\\.ts$": "ts-jest",
     "^.+\\.vue$": "vue-jest",
   },
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/src/$1",
+  },
 };
