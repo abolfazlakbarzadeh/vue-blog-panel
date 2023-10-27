@@ -7,15 +7,22 @@
         @click="toggleSidebar"
       />
       <h2 class="navbar-brand text-white hr-title">Arvan Challenge</h2>
-      <div class="hr-username text-white fw-light">Welcome ...</div>
+      <div class="hr-username text-white fw-light">
+        Welcome {{ user.username }}
+      </div>
     </div>
     <div class="hr-actions ml-auto">
-      <div class="btn btn-outline-info">Logout</div>
+      <div class="btn btn-outline-info" @click="handleLogout">Logout</div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
+import { useRouter } from "vue-router";
 import HumburgerIcon from "../global/humburger-icon.vue";
+import { useAuthStore } from "@/store/auth/auth-store";
+
+const { user, logout } = useAuthStore();
+const router = useRouter();
 
 const props = defineProps({
   sidebarOpen: {
@@ -25,6 +32,11 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(["toggleSidebar"]);
+
+function handleLogout() {
+  logout();
+  router.replace({ path: "/login" });
+}
 function toggleSidebar() {
   emit("toggleSidebar", !props.sidebarOpen);
 }

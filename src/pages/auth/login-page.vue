@@ -6,7 +6,7 @@
           <h5 class="card-title">LOGIN</h5>
           <div class="card-text">
             <div class="d-flex flex-column gap-3">
-              <LoginForm />
+              <LoginForm @submit="handleLogin" />
               <div class="d-flex align-items-center gap-2">
                 <div class="text">Don't have account?</div>
                 <RouterLink
@@ -25,6 +25,14 @@
 <script lang="ts" setup>
 import LoginForm from "@/components/auth/login-form.vue";
 import { ROUTES_NAMES } from "@/routes/constants";
+import { useAuthStore } from "@/store/auth/auth-store";
+import { useRouter } from "vue-router";
+const authStore = useAuthStore();
+const router = useRouter();
+async function handleLogin(params) {
+  const success = await authStore.login(params);
+  if (success) router.replace({ path: "/articles" });
+}
 </script>
 <style scss>
 @import url("../../assets/styles/pages/auth/auth.scss");

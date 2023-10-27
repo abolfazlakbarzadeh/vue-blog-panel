@@ -50,6 +50,7 @@
 import { reactive } from "vue";
 import { Form, Field } from "vee-validate";
 import * as Yup from "yup";
+const emit = defineEmits(["submit"]);
 const data = reactive({
   email: "",
   password: "",
@@ -60,12 +61,8 @@ const schema = Yup.object().shape({
   password: Yup.string().required("Password is required!"),
 });
 
-function submitHandler(values, { setErrors }) {
-  console.log({
-    values,
-    setErrors,
-  });
-  return false;
+function submitHandler(values) {
+  emit("submit", values);
 }
 </script>
 <style scss>

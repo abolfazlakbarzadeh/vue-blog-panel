@@ -8,8 +8,10 @@ import { createPinia } from "pinia";
 import routes from "./routes";
 import axios from "@/utils/axios";
 import Vue3Toasity, { type ToastContainerOptions } from "vue3-toastify";
+import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 
 const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate);
 pinia.use(({ store }) => {
   store.$axios = axios;
 });
@@ -22,5 +24,8 @@ app
     autoClose: 1500,
     theme: "colored",
     icon: false,
+    style: {
+      zIndex: 3,
+    },
   } as ToastContainerOptions);
 app.mount("#app");

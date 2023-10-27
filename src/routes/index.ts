@@ -6,6 +6,7 @@ import ArticlesPage from "pages/dashboard/articles/articles-page.vue";
 import NewArticlePage from "pages/dashboard/articles/new-article-page.vue";
 import EditArticlePage from "pages/dashboard/articles/edit-article-page.vue";
 import { ROUTES_NAMES } from "./constants";
+import { useAuthStore } from "@/store/auth/auth-store";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -57,6 +58,24 @@ const router = createRouter({
       ],
     },
   ],
+});
+router.beforeEach((to, _from, next) => {
+  const authStore = useAuthStore();
+  if (to.meta.isGuest) {
+    if (authStore.isUserAuthenticated) {
+      return next({ name: ROUTES_NAMES.dashboard.articles.self });
+    } else {
+      return next();
+    }
+  } else if (to.meta.requiresAuth) {
+    if (authStore.isUserAuthenticated) {
+      return next();
+    } else {
+      return next({ name: ROUTES_NAMES.auth.login });
+    }
+  }
+
+  return next();
 });
 
 export default router;
