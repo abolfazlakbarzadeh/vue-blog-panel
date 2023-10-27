@@ -46,7 +46,14 @@
                   >Edit</RouterLink
                 >
               </li>
-              <li><div class="dropdown-item">Delete</div></li>
+              <li>
+                <button
+                  class="dropdown-item"
+                  @click="() => showDeleteModal(article.slug)"
+                >
+                  Delete
+                </button>
+              </li>
             </ul>
           </div>
         </td>
@@ -54,11 +61,28 @@
       <tr></tr>
     </tbody>
   </table>
+  <DeleteModal
+    v-if="deleteModalState.enable"
+    title="Delete Article"
+    submit-type="danger"
+    submit-text="Yes"
+    @submit="deleteModal"
+    @dismiss="deleteModalState.enable = false"
+  >
+    Are you sure to delete Article?
+  </DeleteModal>
 </template>
 <script lang="ts" setup>
 import { ROUTES_NAMES } from "@/routes/constants";
+import DeleteModal from "@/components/global/modals/delete-modal.vue";
+import { reactive } from "vue";
 import { useRoute } from "vue-router";
+
 const route = useRoute();
+
+const deleteModalState = reactive<Partial<{ enable: boolean; slug?: string }>>({
+  enable: false,
+});
 defineProps({
   articles: {
     type: Array<any>,
@@ -76,4 +100,13 @@ defineProps({
     default: 1,
   },
 });
+const emit = defineEmits(["deleteArticle"]);
+function showDeleteModal(slug: string) {
+  deleteModalState.slug = slug;
+  deleteModalState.enable = true;
+}
+async function deleteModal() {
+  deleteModalState.enable = false;
+  emit("deleteArticle", deleteModalState.slug);
+}
 </script>

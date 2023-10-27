@@ -6,6 +6,7 @@
         :articles="articles"
         :current-page="currentPage"
         :page-size="pageSize"
+        @delete-article="handleDeleteArticle"
       />
       <ThePagination :total-pages="totalPages" :current-page="currentPage" />
     </div>
@@ -48,6 +49,9 @@ function checkRoute() {
     router.replace({ path: "/articles" });
     return;
   }
+}
+async function handleDeleteArticle(slug: string) {
+  await articlesService.deleteArticle(slug);
 }
 onBeforeMount(() => {
   checkRoute();

@@ -80,14 +80,14 @@
                     class="form-check"
                   >
                     <input
-                      id="flexCheckDefault"
+                      :id="`tag-${tag.value}`"
                       class="form-check-input"
                       type="checkbox"
                       :value="tag.value"
                       :checked="tag.checked"
                       @change="handleTagChange"
                     />
-                    <label class="form-check-label" for="flexCheckDefault">
+                    <label class="form-check-label" :for="`tag-${tag.value}`">
                       {{ tag.value }}
                     </label>
                   </div>
@@ -114,6 +114,7 @@ import { onMounted, ref, toRefs } from "vue";
 import * as Yup from "yup";
 import { useTagService } from "@/services/tags/tags-service";
 import { FetchTagsResponse, Tag } from "@/services/tags/types";
+
 const emit = defineEmits(["submit"]);
 const props = defineProps({
   initial: {
@@ -138,20 +139,24 @@ async function fetchTags() {
   const tags = (await tagsService.fetchTags()) as Awaited<FetchTagsResponse>;
   allTags.value = Array.from(
     new Set([...tags.tags, ...initial.value.article.tagList]),
-  ).map((tag: string) => ({
-    value: tag,
-    checked: (initial.value.article.tagList as string[]).some(
-      (_tag) => tag === _tag,
-    ),
-  }));
+  )
+    .sort()
+    .map((tag: string) => ({
+      value: tag,
+      checked: (initial.value.article.tagList as string[]).some(
+        (_tag) => tag === _tag,
+      ),
+    }));
 }
 
 function changeTagState(tag: string, checked: boolean) {
   const tagIndex = allTags.value.findIndex((_tag) => _tag.value == tag);
-  allTags.value.splice(tagIndex, 1, {
-    value: tag,
-    checked: checked,
-  });
+  allTags.value
+    .splice(tagIndex, 1, {
+      value: tag,
+      checked: checked,
+    })
+    .sort((tag, ntag) => (tag.value > ntag.value ? 1 : -1));
 }
 
 function handleNewTagInputKeyPress(e) {
@@ -159,10 +164,12 @@ function handleNewTagInputKeyPress(e) {
     e.preventDefault();
     // Check the tag to see if it's a duplicate tag; if it's a duplicate, just enable it.
     if (!allTags.value.some((tag) => tag.value == newTagInputValue.value)) {
-      allTags.value = allTags.value.concat({
-        value: newTagInputValue.value,
-        checked: true,
-      });
+      allTags.value = allTags.value
+        .concat({
+          value: newTagInputValue.value,
+          checked: true,
+        })
+        .sort((tag, ntag) => (tag.value > ntag.value ? 1 : -1));
     } else {
       changeTagState(newTagInputValue.value, true);
     }

@@ -59,7 +59,10 @@ export function useArticleService() {
           },
         },
       )
-      .then(() => true)
+      .then(({ data }) => {
+        toast.success("Article created successfully!");
+        return data;
+      })
       .catch(handleCatch("create"))
       .finally(() => {
         globalStore.disbleLoading();
@@ -91,7 +94,10 @@ export function useArticleService() {
           },
         },
       )
-      .then(() => true)
+      .then(({ data }) => {
+        toast.success("Article updated successfully!");
+        return data;
+      })
       .catch(handleCatch("update"))
       .finally(() => {
         globalStore.disbleLoading();
@@ -104,6 +110,9 @@ export function useArticleService() {
         headers: {
           Authorization: userToken(),
         },
+      })
+      .then(() => {
+        toast.success("Article updated successfully!");
       })
       .catch(handleCatch("delete"))
       .finally(() => {
