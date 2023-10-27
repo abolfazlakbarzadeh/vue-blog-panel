@@ -13,6 +13,7 @@
         name="email"
         type="email"
         class="form-control"
+        data-test-subj="email-field"
         :class="{ 'is-invalid': errors.email }"
       />
       <div class="invalid-feedback">{{ errors.email }}</div>
@@ -26,6 +27,7 @@
         v-model="data.password"
         name="password"
         type="password"
+        data-test-subj="password-field"
         class="form-control"
         :class="{ 'is-invalid': errors.password }"
       />
@@ -34,6 +36,7 @@
     <div class="d-grid mt-3">
       <button
         type="submit"
+        data-test-subj="submit-button"
         class="btn btn-primary btn-block"
         :disabled="isSubmitting"
       >

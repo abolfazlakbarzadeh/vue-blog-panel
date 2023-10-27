@@ -11,9 +11,11 @@
       >
       <Field
         id="username"
+        v-model="data.username"
         name="username"
         type="text"
         class="form-control"
+        data-test-subj="username-field"
         :class="{ 'is-invalid': errors.username }"
       />
       <div class="invalid-feedback">{{ errors.username }}</div>
@@ -22,8 +24,10 @@
       <label for="email" :class="{ 'text-danger': errors.email }">Email</label>
       <Field
         id="email"
+        v-model="data.email"
         name="email"
         type="email"
+        data-test-subj="email-field"
         class="form-control"
         :class="{ 'is-invalid': errors.email }"
       />
@@ -35,8 +39,10 @@
       >
       <Field
         id="password"
+        v-model="data.password"
         name="password"
         type="password"
+        data-test-subj="password-field"
         class="form-control"
         :class="{ 'is-invalid': errors.password }"
       />
@@ -59,7 +65,14 @@
 </template>
 <script lang="ts" setup>
 import { Form, Field } from "vee-validate";
+import { reactive } from "vue";
 import * as Yup from "yup";
+
+const data = reactive({
+  username: "",
+  email: "",
+  password: "",
+});
 
 const emit = defineEmits(["submit"]);
 
