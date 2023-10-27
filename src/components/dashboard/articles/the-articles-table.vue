@@ -38,6 +38,9 @@
                   :to="{
                     name: ROUTES_NAMES.dashboard.articles.edit,
                     params: { slug: article.slug },
+                    query: {
+                      from: route.fullPath,
+                    },
                   }"
                   class="dropdown-item"
                   >Edit</RouterLink
@@ -54,6 +57,8 @@
 </template>
 <script lang="ts" setup>
 import { ROUTES_NAMES } from "@/routes/constants";
+import { useRoute } from "vue-router";
+const route = useRoute();
 defineProps({
   articles: {
     type: Array<any>,

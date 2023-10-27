@@ -1,9 +1,10 @@
 import { useAuthStore } from "@/store/auth/auth-store";
 import { AxiosError, AxiosInstance } from "axios";
 import { storeToRefs } from "pinia";
-import { inject } from "vue";
+import { inject, watch } from "vue";
 import {
   CreateArticleResponse,
+  FetchArticleResponse,
   FetchArticlesResponse,
   ICreateArticleParams,
   IFetchArticlesParams,
@@ -12,11 +13,14 @@ import {
 import { useGlobalStore } from "@/store/global/global-store";
 import { toast } from "vue3-toastify";
 import { getUnprocessableStatusErrors } from "@/helpers/http";
+import { useRoute } from "vue-router";
 
 export function useArticleService() {
   const axios = inject<AxiosInstance>("axios");
   const authStore = storeToRefs(useAuthStore());
   const globalStore = useGlobalStore();
+  const route = useRoute();
+  const abort = new AbortController();
 
   const userToken = () => {
     return ["Token", authStore.getUserToken.value].join(" ");
@@ -35,6 +39,7 @@ export function useArticleService() {
         headers: {
           Authorization: userToken(),
         },
+        signal: abort.signal,
       })
       .then(({ data }) => data)
       .catch(handleCatch("fetch"))
@@ -45,12 +50,16 @@ export function useArticleService() {
   function createArticle(params: ICreateArticleParams) {
     globalStore.enableLoading();
     return axios
-      ?.post<CreateArticleResponse>("/articles", params, {
-        headers: {
-          Authorization: userToken(),
+      ?.post<CreateArticleResponse>(
+        "/articles",
+        { article: params },
+        {
+          headers: {
+            Authorization: userToken(),
+          },
         },
-      })
-      .then(({ data }) => data)
+      )
+      .then(() => true)
       .catch(handleCatch("create"))
       .finally(() => {
         globalStore.disbleLoading();
@@ -59,7 +68,7 @@ export function useArticleService() {
   function getArticle(slug: string) {
     globalStore.enableLoading();
     return axios
-      ?.get<FetchArticlesResponse>(`/articles/${slug}`, {
+      ?.get<FetchArticleResponse>(`/articles/${slug}`, {
         headers: {
           Authorization: userToken(),
         },
@@ -73,12 +82,16 @@ export function useArticleService() {
   function updateArticle(slug: string, params: IUpdateArticleParams) {
     globalStore.enableLoading();
     return axios
-      ?.put(`/articles/${slug}`, params, {
-        headers: {
-          Authorization: userToken(),
+      ?.put(
+        `/articles/${slug}`,
+        { article: params },
+        {
+          headers: {
+            Authorization: userToken(),
+          },
         },
-      })
-      .then(({ data }) => data)
+      )
+      .then(() => true)
       .catch(handleCatch("update"))
       .finally(() => {
         globalStore.disbleLoading();
@@ -98,6 +111,12 @@ export function useArticleService() {
       });
   }
 
+  watch(
+    () => route,
+    () => {
+      abort.abort();
+    },
+  );
   return {
     fetchArticles,
     createArticle,
