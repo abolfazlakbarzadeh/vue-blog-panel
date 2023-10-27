@@ -56,15 +56,25 @@ export const useAuthStore = defineStore(AUTH_STORE_NAME, {
           globalStore.disbleLoading();
         });
     },
-    async register(params: RegisterParams) {
-      this.$axios
-        .post<LoginResponse>("/users/register", {
+    async register(params: RegisterParams): Promise<boolean | void> {
+      const globalStore = useGlobalStore();
+
+      globalStore.enableLoading();
+      return this.$axios
+        .post<LoginResponse>("/users", {
           user: params,
         })
         .then(({ data: { user } }) => {
           this.user = user;
+          toast.success(`Welcome ${user.username}!`, {
+            autoClose: 3000,
+          });
+          return true;
         })
-        .catch(handleCatch("register"));
+        .catch(handleCatch("register"))
+        .finally(() => {
+          globalStore.disbleLoading();
+        });
     },
     logout() {
       this.user = { ...USER_INITIAL };
@@ -73,7 +83,8 @@ export const useAuthStore = defineStore(AUTH_STORE_NAME, {
 });
 
 const handleCatch =
-  (action: "login" | "register" | "fetchUser") => (error?: AxiosError) => {
+  (action: "login" | "register" | "fetchUser") =>
+  (error?: AxiosError<{ errors: object; message?: string }>) => {
     console.log({
       error,
       action,
@@ -99,6 +110,15 @@ const handleCatch =
           toast.error(`Login Failed!: Username and/or Password is invalid`);
           break;
         }
+        case 422: {
+          const errors = Object.entries(error.response.data?.errors || {}).map(
+            ([key, value]) => `Login Failed!: ${key} ${value}`,
+          );
+          errors.forEach((error) => {
+            toast.error(error);
+          });
+          break;
+        }
         default: {
           toast.error("Login Failed!");
         }
@@ -107,8 +127,13 @@ const handleCatch =
 
     function handlerRegisterCatch() {
       switch (error?.response?.status) {
-        case 403: {
-          toast.error(`Register Failed!: Username and/or Password is invalid`);
+        case 422: {
+          const errors = Object.entries(error.response.data?.errors || {}).map(
+            ([key, value]) => `Register Failed!: ${key} ${value}`,
+          );
+          errors.forEach((error) => {
+            toast.error(error);
+          });
           break;
         }
         default: {

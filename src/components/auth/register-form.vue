@@ -60,18 +60,17 @@
 <script lang="ts" setup>
 import { Form, Field } from "vee-validate";
 import * as Yup from "yup";
+
+const emit = defineEmits(["submit"]);
+
 const schema = Yup.object().shape({
   username: Yup.string().required("Username is required!"),
   email: Yup.string().email().required("Email is required!"),
   password: Yup.string().required("Password is required!"),
 });
 
-function submitHandler(values, { setErrors }) {
-  console.log({
-    values,
-    setErrors,
-  });
-  return false;
+function submitHandler(values) {
+  emit("submit", values);
 }
 </script>
 <style scss>
